@@ -148,18 +148,19 @@ def sendmail(availList):
 
 #SendTelegramMessage : This is the method to use Telegram as your Notification Service
 def sendTelegramMessage(text):
-    telegramAPIUrl = "YOUR-BOT-API-URL-HERE" + \
+    telegramAPIUrl = "YOUR-TELEGRAM-API-URL" + \
         urllib.parse.quote(text)
     res = requests.post(telegramAPIUrl, headers=header)
-    print(res.status_code)
+    if res.status_code == 200:
+        print("Successfully Sent : ", res.status_code)
+    else:
+        print("Unable to Send Telegram Message : ",res.status_code)
 
 # Formating the Response for Telegram
 def processMsgforTele(plist):
     teststr = ""
-    print("PList in funct", plist)
     for item in plist:
         teststr = teststr+item['name']+" \n"+item['address']
-        print(item)
         if item['available_slot'] != []:
             for slot in item['available_slot']:
                 if slot['available_capacity'] > 0:
@@ -175,8 +176,7 @@ availList18 = getAvailableSlotsfor18(jsonRes)
 
 
 if len(availList18) != 0:
-    print("<=== All 18+ Vaccine Centre in Meerut ===> \n")
-    #printList(availList18)
+    print("\n<=== 18+ Vaccine Centre are Available ===> \n")
 
 if len(availList18) == 0:
     oops_banner = pyfiglet.figlet_format("Oops !!\n")
@@ -184,7 +184,8 @@ if len(availList18) == 0:
     print(":( No Slots Available for 18+ Vaccination")
     print("\n")
 else:
-    print("\n Available Vaccination Centre's are => \n")
+    print("\nSending Available Vaccination Centre's details on Telegram => \n\n")
+    
     # sendmail(availList18)
     
     resultList = []
